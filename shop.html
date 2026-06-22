@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shop — Girl Book Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #fff7fb; }
+  * { box-sizing: border-box; }
+  ::selection { background: oklch(0.9 0.06 12); }
+  .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; grid-auto-flow: dense; }
+  .shop-grid .wide { grid-column: span 2; }
+  @media (max-width: 900px) {
+    .shop-grid { grid-template-columns: repeat(2, 1fr); }
+    .shop-grid .wide { grid-column: span 2; }
+  }
+  @media (max-width: 560px) {
+    .shop-grid { grid-template-columns: 1fr; }
+    .shop-grid .wide { grid-column: span 1; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="site/image-slot.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="site/data.jsx"></script>
+<script type="text/babel" src="site/kit.jsx"></script>
+
+<script type="text/babel">
+const { PETALS, petal, INK, SOFT, F_HEAD, F_BODY, HERO_GRAD, Pill, Nav, Footer } = window;
+
+function ProductCard({ p: prod }) {
+  const c = PETALS[prod.petal] || PETALS.rose;
+  const live = prod.link && prod.link.trim();
+  return (
+    <div className={prod.wide ? 'wide' : ''} style={{ background: '#fff', borderRadius: 24, overflow: 'hidden',
+      boxShadow: '0 12px 28px rgba(58,47,56,0.08)', borderTop: `5px solid ${c.ink}`, display: 'flex',
+      flexDirection: 'column' }}>
+      <div style={{ position: 'relative', background: `linear-gradient(150deg, ${c.soft}, #fff 90%)` }}>
+        <img src={prod.img} alt={prod.name} style={{ display: 'block', width: '100%', height: 'auto' }} />
+        <span style={{ position: 'absolute', top: 12, right: 12, background: '#fff', color: INK, borderRadius: 999,
+          padding: '5px 13px', fontSize: 14, fontWeight: 800, boxShadow: '0 4px 10px rgba(0,0,0,0.08)' }}>{prod.price}</span>
+      </div>
+      <div style={{ padding: 18, display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <Pill bg={c.soft} color={c.ink}>{prod.tag}</Pill>
+        <h3 style={{ fontFamily: F_HEAD, fontSize: 20, fontWeight: 600, margin: '12px 0 6px', lineHeight: 1.15 }}>
+          {prod.name}</h3>
+        <p style={{ fontSize: 13.5, lineHeight: 1.5, color: '#6b5f67', fontWeight: 600, margin: '0 0 16px' }}>
+          {prod.blurb}</p>
+        <div style={{ marginTop: 'auto' }}>
+          {live ? (
+            <a href={prod.link} target="_blank" rel="noopener" style={{ display: 'block', textAlign: 'center',
+              color: c.on, background: c.ink, padding: '12px', borderRadius: 999, fontSize: 14, fontWeight: 800,
+              textDecoration: 'none' }}>Add to cart · {prod.price}</a>
+          ) : (
+            <span style={{ display: 'block', textAlign: 'center', color: c.ink, background: c.soft, padding: '12px',
+              borderRadius: 999, fontSize: 14, fontWeight: 800 }}>Coming soon ♡</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Shop() {
+  return (
+    <div style={{ fontFamily: F_BODY, color: INK }}>
+      <Nav active="Shop" />
+      <header style={{ maxWidth: 1180, margin: '0 auto', padding: '14px 24px 0' }}>
+        <div style={{ borderRadius: 32, padding: '44px 44px', background: HERO_GRAD, textAlign: 'center' }}>
+          <Pill bg="#fff" color={PETALS.lav.ink}>🛍️ Puzzle Girls Club</Pill>
+          <h1 style={{ fontFamily: F_HEAD, fontSize: 'clamp(34px, 4.4vw, 48px)', fontWeight: 600,
+            margin: '16px auto 10px', lineHeight: 1.05, maxWidth: 640 }}>Read. Deduce. Solve. — wear it.</h1>
+          <p style={{ fontSize: 16.5, color: '#6b5f67', fontWeight: 600, lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+            Mugs, hoodies, totes and the famous Mystery Box — everything a puzzle girl needs for the perfect
+            night in. Made with the same love we put into testing every book.</p>
+        </div>
+      </header>
+
+      <section style={{ maxWidth: 1180, margin: '0 auto', padding: '34px 44px 10px' }}>
+        <div className="shop-grid">
+          {window.MERCH.map(prod => <ProductCard key={prod.id} p={prod} />)}
+        </div>
+        <p style={{ textAlign: 'center', fontSize: 12.5, color: SOFT, fontWeight: 700, marginTop: 26, lineHeight: 1.5 }}>
+          💜 Prices are a guide while we set up the shop. Tell us when your store links are ready and each item
+          will go live with an “Add to cart” button.</p>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Shop />);
+</script>
+</body>
+</html>

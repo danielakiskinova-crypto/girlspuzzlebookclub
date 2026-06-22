@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Girls — Girl Book Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #fff7fb; }
+  * { box-sizing: border-box; }
+  ::selection { background: oklch(0.9 0.06 12); }
+  .girls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .steps-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 820px) { .girls-grid { grid-template-columns: 1fr; } .steps-3 { grid-template-columns: 1fr; } }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="site/image-slot.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="site/data.jsx"></script>
+<script type="text/babel" src="site/kit.jsx"></script>
+
+<script type="text/babel">
+const { PETALS, petal, INK, SOFT, F_HEAD, F_BODY, HERO_GRAD, Pill, Stars, Nav, Footer } = window;
+
+const HUES = ['rose', 'coral', 'mint', 'sky'];
+
+function GirlCard({ g, i }) {
+  const p = PETALS[HUES[i % HUES.length]];
+  const fav = window.bookById(g.fav);
+  return (
+    <div style={{ background: '#fff', borderRadius: 26, padding: 24, boxShadow: '0 12px 28px rgba(58,47,56,0.08)',
+      borderTop: `6px solid ${p.ink}`, display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+      <div style={{ flex: '0 0 auto' }}>
+        <div style={{ width: 96, height: 96, borderRadius: '50%', overflow: 'hidden',
+          boxShadow: `0 0 0 3px #fff, 0 0 0 6px ${p.ink}` }}>
+          {g.photo
+            ? <img src={g.photo} alt={g.name} style={{ display: 'block', width: 96, height: 96, objectFit: 'cover' }} />
+            : <image-slot id={`girlbig-${g.name}`} shape="circle" placeholder={g.initial}
+                style={{ display: 'block', width: 96, height: 96 }} />}
+        </div>
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 24, fontWeight: 600, margin: '0 0 2px' }}>{g.name}</h2>
+        <Pill bg={p.soft} color={p.ink}>{g.role}</Pill>
+        <p style={{ fontSize: 14.5, lineHeight: 1.6, fontWeight: 600, margin: '12px 0 14px' }}>{g.bio}</p>
+        <a href={`book.html?id=${fav.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8,
+          textDecoration: 'none', color: INK, background: petal(fav).soft, borderRadius: 14, padding: '10px 14px' }}>
+          <span style={{ fontSize: 11, fontWeight: 800, color: SOFT, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Her pick</span>
+          <span style={{ fontFamily: F_HEAD, fontSize: 14.5, fontWeight: 600, color: petal(fav).ink }}>{fav.title}</span>
+          <span style={{ marginLeft: 'auto', fontWeight: 800, color: petal(fav).ink }}>→</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const steps = [
+    ['We pick', 'One new puzzle book a week. Someone spots it, the group chat does the rest.', '🧩', 'rose'],
+    ['We puzzle', 'We solve it together — snacks, tea, no rushing. When it turns tricky, out come the detective hats.', '🔍', 'mint'],
+    ['We tell you', 'Honest, friendly take: how fun it is, where it gets challenging, and a straight link to Amazon.', '💌', 'sky'],
+  ];
+  return (
+    <div style={{ fontFamily: F_BODY, color: INK }}>
+      <Nav active="The Girls" />
+
+      <header style={{ maxWidth: 1180, margin: '0 auto', padding: '14px 24px 0' }}>
+        <div style={{ borderRadius: 32, padding: '46px 44px', background: HERO_GRAD, textAlign: 'center' }}>
+          <Pill bg="#fff" color={PETALS.sky.ink}>💐 three friends, one shelf</Pill>
+          <h1 style={{ fontFamily: F_HEAD, fontSize: 'clamp(36px, 4.6vw, 52px)', fontWeight: 600,
+            margin: '16px auto 10px', lineHeight: 1.05, maxWidth: 720 }}>
+            Good books. Sharp minds. Perfect day.</h1>
+          <p style={{ fontSize: 17, color: '#6b5f67', fontWeight: 600, lineHeight: 1.6, maxWidth: 600, margin: '0 auto 28px' }}>
+            It started as one wine-night murder mystery and became a weekly ritual. We’re not here to race the
+            clock — we’re here for the relaxing evenings, the laughs, and the satisfying moments when a book turns
+            tricky and we have to think like real detectives.</p>
+          <div style={{ borderRadius: 22, overflow: 'hidden', maxWidth: 760, margin: '0 auto',
+            boxShadow: '0 20px 44px rgba(58,47,56,0.18)', border: '5px solid #fff' }}>
+            <img src="site/photos/the-girls.png" alt="The girls of the book club"
+              style={{ display: 'block', width: '100%', height: 'auto' }} />
+          </div>
+        </div>
+      </header>
+
+      {/* how it works */}
+      <section style={{ maxWidth: 1180, margin: '0 auto', padding: '40px 44px 10px' }}>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '0 0 20px', textAlign: 'center' }}>
+          How the club works</h2>
+        <div className="steps-3">
+          {steps.map(([t, d, e, hue], i) => {
+            const p = PETALS[hue];
+            return (
+              <div key={t} style={{ background: '#fff', borderRadius: 24, padding: 26, textAlign: 'center',
+                boxShadow: '0 10px 24px rgba(58,47,56,0.06)' }}>
+                <div style={{ width: 60, height: 60, borderRadius: 18, margin: '0 auto 14px', background: p.soft,
+                  display: 'grid', placeItems: 'center', fontSize: 28 }}>{e}</div>
+                <div style={{ fontFamily: F_HEAD, fontSize: 13, fontWeight: 700, color: p.ink, marginBottom: 6,
+                  textTransform: 'uppercase', letterSpacing: '0.08em' }}>Step {i + 1}</div>
+                <div style={{ fontFamily: F_HEAD, fontSize: 21, fontWeight: 600, marginBottom: 8 }}>{t}</div>
+                <p style={{ fontSize: 14, lineHeight: 1.55, fontWeight: 600, color: '#6b5f67', margin: 0 }}>{d}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* the girls */}
+      <section style={{ maxWidth: 1180, margin: '0 auto', padding: '36px 44px 10px' }}>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '0 0 20px', textAlign: 'center' }}>
+          Meet the testers</h2>
+        <div className="girls-grid">
+          {window.GIRLS.map((g, i) => <GirlCard key={g.name} g={g} i={i} />)}
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

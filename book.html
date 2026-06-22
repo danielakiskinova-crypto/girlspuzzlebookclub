@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book — Girl Book Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #fff7fb; }
+  * { box-sizing: border-box; }
+  ::selection { background: oklch(0.9 0.06 12); }
+  @keyframes gbcPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.55; } }
+  .gbc-pulse { animation: gbcPulse 1.3s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .gbc-pulse { animation: none; } }
+  .detail-grid { display: grid; grid-template-columns: 360px 1fr; gap: 40px; align-items: start; }
+  .reviews-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .watch-grid { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: center; }
+  @media (max-width: 880px) {
+    .detail-grid { grid-template-columns: 1fr; gap: 28px; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .watch-grid { grid-template-columns: 1fr; gap: 24px; }
+    .buy-sticky { position: static !important; }
+  }
+  .chip { cursor: pointer; border: none; font-family: inherit; }
+  textarea, input { font-family: inherit; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="site/image-slot.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="site/data.jsx"></script>
+<script type="text/babel" src="site/kit.jsx"></script>
+
+<script type="text/babel">
+const { PETALS, petal, INK, SOFT, F_HEAD, F_BODY, Pill, Stars, Dots, Cover, Nav, Footer, StatusBadge, statusInfo, TikTokEmbed } = window;
+const { useState, useEffect } = React;
+
+function getId() {
+  const m = new URLSearchParams(location.search).get('id');
+  return m || window.BOOKS[0].id;
+}
+
+const DIFF_WORD = { 1: 'Featherlight', 2: 'Gentle', 3: 'A proper challenge', 4: 'Fiendish', 5: 'Detective-level' };
+
+function Spec({ label, value }) {
+  return (
+    <div>
+      <div style={{ fontSize: 11, color: SOFT, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>
+      <div style={{ fontFamily: F_HEAD, fontSize: 16, fontWeight: 600, marginTop: 2 }}>{value}</div>
+    </div>
+  );
+}
+
+function CommentForm({ bookId, onAdd }) {
+  const [name, setName] = useState('');
+  const [stars, setStars] = useState(5);
+  const [text, setText] = useState('');
+  const p = PETALS.rose;
+  const submit = () => {
+    if (!text.trim()) return;
+    onAdd({ name: name.trim() || 'Anonymous reader', stars, text: text.trim(), club: false, mine: true });
+    setName(''); setText(''); setStars(5);
+  };
+  return (
+    <div style={{ background: '#fff', borderRadius: 22, padding: 22, boxShadow: '0 10px 24px rgba(58,47,56,0.07)',
+      border: `2px dashed ${PETALS.lav.soft}` }}>
+      <div style={{ fontFamily: F_HEAD, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>Join the conversation ✨</div>
+      <div style={{ fontSize: 13.5, fontWeight: 700, color: SOFT, marginBottom: 16, lineHeight: 1.5 }}>
+        Every woman who’s read it is welcome here — share your thoughts, a warning, or a perfect moment.</div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Your name"
+          style={{ flex: '1 1 160px', minWidth: 0, padding: '11px 16px', borderRadius: 999, fontSize: 14,
+            fontWeight: 700, border: `1.5px solid ${PETALS.lav.soft}`, outline: 'none', color: INK }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: PETALS.honey.soft,
+          borderRadius: 999, padding: '0 14px' }}>
+          {[1,2,3,4,5].map(i => (
+            <button key={i} className="chip" onClick={() => setStars(i)}
+              style={{ background: 'none', fontSize: 20, lineHeight: 1, padding: '6px 1px',
+                color: i <= stars ? 'oklch(0.7 0.16 70)' : '#e3d3c2' }}>★</button>
+          ))}
+        </div>
+      </div>
+      <textarea value={text} onChange={e => setText(e.target.value)} rows={3}
+        placeholder="What did you think? Any warnings, hints, or perfect moments…"
+        style={{ width: '100%', padding: '13px 16px', borderRadius: 16, fontSize: 14, fontWeight: 600,
+          border: `1.5px solid ${PETALS.lav.soft}`, outline: 'none', resize: 'vertical', color: INK, lineHeight: 1.5 }} />
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+        <button className="chip" onClick={submit}
+          style={{ color: '#fff', padding: '12px 26px', borderRadius: 999, fontWeight: 800, fontSize: 14,
+            background: 'linear-gradient(135deg, oklch(0.64 0.17 12), oklch(0.62 0.16 340))' }}>Post comment</button>
+      </div>
+    </div>
+  );
+}
+
+function ReviewCard({ r, i }) {
+  const p = PETALS[['rose','coral','mint','sky','lav','berry'][i % 6]];
+  return (
+    <div style={{ background: '#fff', borderRadius: 20, padding: 18, boxShadow: '0 8px 20px rgba(58,47,56,0.05)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+        <div style={{ width: 38, height: 38, borderRadius: '50%', background: p.ink, color: '#fff',
+          display: 'grid', placeItems: 'center', fontFamily: F_HEAD, fontSize: 16, fontWeight: 600 }}>{r.name[0]}</div>
+        <div>
+          <div style={{ fontSize: 13.5, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
+            {r.name}
+            {r.club && <Pill bg={p.soft} color={p.ink}>club</Pill>}
+            {r.mine && <Pill bg={PETALS.honey.soft} color={'oklch(0.5 0.13 70)'}>you</Pill>}</div>
+          <div style={{ fontSize: 11, color: SOFT, fontWeight: 700 }}>verified solve</div>
+        </div>
+        <span style={{ marginLeft: 'auto' }}><Stars n={r.stars} /></span>
+      </div>
+      <p style={{ fontSize: 14, lineHeight: 1.55, fontWeight: 600, margin: 0 }}>{r.text}</p>
+    </div>
+  );
+}
+
+function BookPage() {
+  const book = window.bookById(getId());
+  const p = petal(book);
+  const seed = window.reviewsFor(book.id);
+  const lsKey = `gbc-comments-${book.id}`;
+  const [mine, setMine] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(lsKey) || '[]'); } catch (e) { return []; }
+  });
+  useEffect(() => { try { localStorage.setItem(lsKey, JSON.stringify(mine)); } catch (e) {} }, [mine]);
+  const reviews = [...mine, ...seed];
+  const addComment = (c) => setMine(m => [c, ...m]);
+  // Average rating across all comments (falls back to the book's own rating).
+  const avg = reviews.length
+    ? Math.round((reviews.reduce((sum, r) => sum + r.stars, 0) / reviews.length) * 10) / 10
+    : book.stars;
+
+  return (
+    <div style={{ fontFamily: F_BODY, color: INK }}>
+      <Nav active="Books" />
+
+      <div style={{ maxWidth: 1180, margin: '0 auto', padding: '8px 44px 0', fontSize: 13, fontWeight: 800, color: SOFT }}>
+        <a href="books.html" style={{ color: p.ink, textDecoration: 'none' }}>← All books</a>
+        <span style={{ margin: '0 8px', opacity: 0.5 }}>/</span>{book.tag}
+      </div>
+
+      <section className="detail-grid" style={{ maxWidth: 1180, margin: '0 auto', padding: '18px 44px 0' }}>
+        {/* left: cover + buy */}
+        <div className="buy-sticky" style={{ position: 'sticky', top: 20 }}>
+          <div style={{ background: '#fff', borderRadius: 26, padding: 18, boxShadow: '0 20px 44px rgba(58,47,56,0.14)',
+            borderTop: `6px solid ${p.ink}` }}>
+            <Cover book={book} h={360} idPrefix="detail" radius={16} natural={!!book.cover} />
+            <StatusBadge book={book} style={{ position: 'absolute', top: 30, left: 30 }} />
+            <a href={book.amazon} target="_blank" rel="noopener"
+              style={{ display: 'block', textAlign: 'center', marginTop: 16, color: '#5a3d10', background: 'oklch(0.84 0.14 85)',
+                padding: '15px', borderRadius: 999, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+              Buy on Amazon →</a>
+            {book.amazonLinks && (
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 11, color: SOFT, fontWeight: 800, textAlign: 'center', marginBottom: 8,
+                  textTransform: 'uppercase', letterSpacing: '0.06em' }}>Shop your region</div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {Object.entries(book.amazonLinks).map(([region, url]) => (
+                    <a key={region} href={url} target="_blank" rel="noopener"
+                      style={{ flex: '1 1 auto', textAlign: 'center', textDecoration: 'none', color: p.ink,
+                        background: p.soft, borderRadius: 999, padding: '9px 14px', fontWeight: 800, fontSize: 13 }}>
+                      {region}</a>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div style={{ textAlign: 'center', fontSize: 11.5, color: SOFT, fontWeight: 700, marginTop: 12 }}>
+              Affiliate link · supports the club at no extra cost</div>
+          </div>
+        </div>
+
+        {/* right: details */}
+        <div>
+          <Pill bg={p.soft} color={p.ink}>{book.tag}</Pill>
+          <h1 style={{ fontFamily: F_HEAD, fontSize: 'clamp(34px, 4.4vw, 48px)', fontWeight: 600,
+            margin: '14px 0 6px', lineHeight: 1.06 }}>{book.title}</h1>
+          <div style={{ fontSize: 15, color: SOFT, fontWeight: 800, marginBottom: 16 }}>by {book.author}</div>
+
+          {statusInfo(book).testing && (
+            <div style={{ display: 'flex', gap: 13, alignItems: 'center', background: 'oklch(0.96 0.03 25)',
+              border: '1.5px solid oklch(0.85 0.08 25)', borderRadius: 18, padding: '14px 18px', marginBottom: 20 }}>
+              <span style={{ fontSize: 22 }}>🔍</span>
+              <div>
+                <div style={{ fontFamily: F_HEAD, fontSize: 15, fontWeight: 600, color: 'oklch(0.55 0.17 25)' }}>
+                  We’re testing this one right now</div>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: '#6b5f67', lineHeight: 1.5 }}>
+                  The girls are solving it this week — the rating and verdict below are early notes and will be
+                  updated once we finish.</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 22 }}>
+            <span style={{ background: '#fff', borderRadius: 999, padding: '8px 16px', fontWeight: 800, fontSize: 15,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}><Stars n={avg} size={16} /> <span style={{ color: INK }}>{avg}</span>
+              <span style={{ color: SOFT, fontWeight: 700 }}> · {reviews.length} {reviews.length === 1 ? 'rating' : 'ratings'}</span></span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, fontSize: 13, fontWeight: 800, color: SOFT }}>
+              challenge <Dots n={book.difficulty} p={p} /> <span style={{ color: p.ink }}>{DIFF_WORD[book.difficulty]}</span></span>
+          </div>
+
+          <p style={{ fontSize: 17, lineHeight: 1.65, fontWeight: 600, margin: '0 0 18px' }}>{book.long}</p>
+
+          {/* verdict */}
+          <div style={{ background: p.soft, borderRadius: 20, padding: '18px 22px', margin: '0 0 24px',
+            display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <span style={{ fontSize: 22 }}>💬</span>
+            <div>
+              <div style={{ fontFamily: F_HEAD, fontSize: 14, fontWeight: 600, color: p.ink, marginBottom: 3 }}>
+                The club’s verdict</div>
+              <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.5 }}>{book.verdict}</div>
+            </div>
+          </div>
+
+          {/* specs */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, background: '#fff',
+            borderRadius: 20, padding: 22, boxShadow: '0 8px 20px rgba(58,47,56,0.05)', marginBottom: 24 }}>
+            <Spec label="Solve time" value={book.hours} />
+            <Spec label="Players" value={book.players} />
+            <Spec label="Length" value={book.pages} />
+            <Spec label="Difficulty" value={DIFF_WORD[book.difficulty]} />
+          </div>
+
+          {/* what's inside */}
+          <h2 style={{ fontFamily: F_HEAD, fontSize: 22, fontWeight: 600, margin: '0 0 14px' }}>What’s inside</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+            {book.inside.map((it, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', background: '#fff', borderRadius: 16,
+                padding: '14px 16px', boxShadow: '0 6px 16px rgba(58,47,56,0.04)', fontSize: 14, fontWeight: 700 }}>
+                <span style={{ width: 26, height: 26, borderRadius: '50%', flex: '0 0 auto', background: petalRot(i).soft,
+                  color: petalRot(i).ink, display: 'grid', placeItems: 'center', fontSize: 13, fontWeight: 800 }}>✦</span>
+                {it}
+              </div>
+            ))}
+          </div>
+
+          {/* testers */}
+          <h2 style={{ fontFamily: F_HEAD, fontSize: 22, fontWeight: 600, margin: '0 0 12px' }}>Tested by</h2>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {book.testers.map((t, i) => (
+              <a key={t} href="girls.html" style={{ display: 'flex', alignItems: 'center', gap: 9, background: '#fff',
+                borderRadius: 999, padding: '7px 16px 7px 7px', boxShadow: '0 6px 16px rgba(58,47,56,0.05)',
+                textDecoration: 'none', color: INK }}>
+                <span style={{ width: 30, height: 30, borderRadius: '50%', background: petalRot(i).ink, color: '#fff',
+                  display: 'grid', placeItems: 'center', fontFamily: F_HEAD, fontSize: 14, fontWeight: 600 }}>{t[0]}</span>
+                <span style={{ fontSize: 14, fontWeight: 800 }}>{t}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* watch us solve it */}
+      <section style={{ maxWidth: 1180, margin: '0 auto', padding: '44px 44px 10px' }}>
+        <div style={{ borderRadius: 28, padding: '30px 34px',
+          background: 'linear-gradient(120deg, oklch(0.95 0.05 12), oklch(0.95 0.05 300))' }}>
+          <div className="watch-grid">
+            <div>
+              <Pill bg="#fff" color={p.ink}>🎬 on TikTok</Pill>
+              <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '14px 0 8px' }}>
+                Watch the girls puzzle it</h2>
+              <p style={{ fontSize: 15.5, lineHeight: 1.6, fontWeight: 600, color: '#6b5f67', margin: '0 0 16px',
+                maxWidth: 440 }}>
+                See us laugh, get stuck and finally crack it. Our solve video for “{book.title}” — spoiler-free,
+                we promise.</p>
+              <a href="watch.html"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: INK, color: '#fff',
+                  padding: '12px 24px', borderRadius: 999, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}>
+                See all our videos →</a>
+            </div>
+            <TikTokEmbed url={book.tiktok} accent={p} />
+          </div>
+        </div>
+      </section>
+
+      {/* comments */}
+      <section style={{ maxWidth: 1180, margin: '0 auto', padding: '44px 44px 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+          <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: 0 }}>Comments</h2>
+          <span style={{ fontSize: 14, fontWeight: 800, color: SOFT }}>{reviews.length} from readers &amp; the club</span>
+        </div>
+        <div style={{ marginBottom: 22 }}><CommentForm bookId={book.id} onAdd={addComment} /></div>
+        <div className="reviews-grid">
+          {reviews.map((r, i) => <ReviewCard key={i} r={r} i={i} />)}
+        </div>
+        <div style={{ fontSize: 12, color: SOFT, fontWeight: 700, marginTop: 18, textAlign: 'center', lineHeight: 1.5 }}>
+          💜 Comments you post are saved on your device for now. Once the site is live, everyone will see each
+          other’s comments.</div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+function petalRot(i) {
+  const order = ['rose','coral','honey','mint','sky','lav','berry'];
+  return PETALS[order[i % order.length]];
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<BookPage />);
+</script>
+</body>
+</html>

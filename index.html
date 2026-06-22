@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Girl Book Club — puzzle books we couldn't put down</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #fff7fb; }
+  * { box-sizing: border-box; }
+  ::selection { background: oklch(0.9 0.06 12); }
+  @keyframes gbcPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.55; } }
+  .gbc-pulse { animation: gbcPulse 1.3s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .gbc-pulse { animation: none; } }
+  .hero-grid { display: grid; grid-template-columns: 1fr 0.82fr; gap: 40px; align-items: center; }
+  .hero-h1 { font-family: "Fredoka", sans-serif; font-weight: 600; line-height: 1.03;
+    margin: 18px 0 16px; font-size: clamp(40px, 4.6vw, 58px); }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .girls-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .split-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .watch-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: start; }
+  .shop-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .watch-strip { grid-template-columns: repeat(2, 1fr); } .shop-strip { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .watch-strip { grid-template-columns: 1fr; } .shop-strip { grid-template-columns: 1fr; } }
+  @media (max-width: 920px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 30px; }
+    .split-2 { grid-template-columns: 1fr; }
+    .girls-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .hero-h1 br { display: none; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="site/image-slot.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="site/data.jsx"></script>
+<script type="text/babel" src="site/kit.jsx"></script>
+
+<script type="text/babel">
+const { PETALS, petal, INK, SOFT, F_HEAD, F_BODY, HERO_GRAD, BRAND_GRAD,
+        Pill, Stars, Dots, Cover, Nav, Footer, BookCard } = window;
+
+function Hero() {
+  const stats = [['3', 'of us solving', 'mint'], ['1', 'book a week', 'rose'], ['0', 'duds', 'sky']];
+  return (
+    <div style={{ maxWidth: 1180, margin: '0 auto', padding: '14px 24px 0' }}>
+      <div style={{ borderRadius: 32, padding: '46px 44px', background: HERO_GRAD }}>
+        <div className="hero-grid">
+          <div>
+            <Pill bg="#fff" color={PETALS.rose.ink}>✨ cosy puzzling, no stopwatch in sight</Pill>
+            <h1 className="hero-h1">
+              The puzzle books<br />we couldn’t put<br />
+              <span style={{ background: 'linear-gradient(100deg, oklch(0.62 0.17 12), oklch(0.6 0.16 300))',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>down</span>.</h1>
+            <p style={{ fontSize: 16.5, lineHeight: 1.6, color: '#6b5f67', maxWidth: 440, margin: '0 0 26px', fontWeight: 600 }}>
+              Three friends, one book a week. It’s not about racing to the answer — it’s the fun, the relaxing
+              evenings, and the moments that turn tricky and need a real detective’s eye. We test each one, then
+              link you straight to Amazon.</p>
+            <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+              <a href="books.html" style={{ background: INK, color: '#fff', padding: '14px 28px', borderRadius: 999,
+                fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>Browse the shelf</a>
+              <a href="girls.html" style={{ color: PETALS.berry.ink, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}>
+                Meet the girls →</a>
+            </div>
+            <div style={{ display: 'flex', gap: 26, marginTop: 30 }}>
+              {stats.map(([n, l, p]) => (
+                <div key={l}>
+                  <div style={{ fontFamily: F_HEAD, fontSize: 30, fontWeight: 600, color: PETALS[p].ink }}>{n}</div>
+                  <div style={{ fontSize: 12.5, color: SOFT, fontWeight: 800 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ position: 'relative' }}>
+            <div style={{ background: '#fff', borderRadius: 26, padding: 18, boxShadow: '0 22px 46px rgba(58,47,56,0.16)',
+              transform: 'rotate(-2deg)' }}>
+              <Cover book={window.BOOKS[0]} h={230} idPrefix="hero" natural={!!window.BOOKS[0].cover} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
+                <div>
+                  <div style={{ fontFamily: F_HEAD, fontSize: 17, fontWeight: 600 }}>This week’s read</div>
+                  <div style={{ fontSize: 12, color: SOFT, fontWeight: 800 }}>3 of us, still solving</div>
+                </div>
+                <Pill bg={PETALS.lav.soft} color={PETALS.lav.ink}>◆ Fiendish</Pill>
+              </div>
+            </div>
+            <div style={{ position: 'absolute', bottom: -14, left: -14, color: '#5a3d10', background: 'oklch(0.84 0.14 85)',
+              padding: '8px 16px', borderRadius: 999, fontWeight: 800, fontSize: 13, transform: 'rotate(-6deg)',
+              boxShadow: '0 8px 18px rgba(0,0,0,0.14)' }}>still solving…</div>
+            <div style={{ position: 'absolute', top: -12, right: -10, color: '#fff', background: PETALS.mint.ink,
+              padding: '7px 14px', borderRadius: 999, fontWeight: 800, fontSize: 12, transform: 'rotate(5deg)',
+              boxShadow: '0 8px 18px rgba(0,0,0,0.12)' }}>♡ testing now</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Featured() {
+  const featured = window.BOOKS.slice(0, 3);
+  return (
+    <section style={{ maxWidth: 1180, margin: '0 auto', padding: '40px 44px 10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 32, fontWeight: 600, margin: 0 }}>Fresh off the table 🧩</h2>
+        <a href="books.html" style={{ fontSize: 14, fontWeight: 800, color: PETALS.rose.ink, textDecoration: 'none' }}>See all →</a>
+      </div>
+      <div className="grid-3">
+        {featured.map((b, i) => <BookCard key={b.id} book={b} i={i} />)}
+      </div>
+    </section>
+  );
+}
+
+function Girls() {
+  return (
+    <section style={{ maxWidth: 1180, margin: '40px auto', padding: '0 24px' }}>
+      <div style={{ borderRadius: 28, padding: '34px 36px',
+        background: 'linear-gradient(120deg, oklch(0.95 0.05 12), oklch(0.95 0.05 160) 50%, oklch(0.95 0.05 300))' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22 }}>
+          <div>
+            <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '0 0 4px' }}>Meet the girls 💐</h2>
+            <p style={{ fontSize: 14, color: SOFT, fontWeight: 700, margin: 0 }}>Zlati, Dani &amp; Ivy — good books, sharp minds.</p>
+          </div>
+          <a href="girls.html" style={{ fontSize: 13, fontWeight: 800, color: PETALS.berry.ink, textDecoration: 'none' }}>
+            Read our stories →</a>
+        </div>
+        <div className="girls-4">
+          {window.GIRLS.map((g, i) => {
+            const p = PETALS[['rose','coral','mint','sky'][i % 4]];
+            return (
+              <a key={g.name} href="girls.html" style={{ background: '#fff', borderRadius: 20, padding: 18, textAlign: 'center',
+                boxShadow: '0 10px 22px rgba(58,47,56,0.07)', textDecoration: 'none', color: INK }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', margin: '0 auto 12px', overflow: 'hidden',
+                  boxShadow: `0 0 0 3px #fff, 0 0 0 6px ${p.ink}` }}>
+                  {g.photo
+                    ? <img src={g.photo} alt={g.name} style={{ display: 'block', width: 72, height: 72, objectFit: 'cover' }} />
+                    : <image-slot id={`girl-${g.name}`} shape="circle" placeholder={g.initial}
+                        style={{ display: 'block', width: 72, height: 72 }} />}
+                </div>
+                <div style={{ fontFamily: F_HEAD, fontSize: 17, fontWeight: 600 }}>{g.name}</div>
+                <div style={{ fontSize: 12, color: SOFT, fontWeight: 700, marginTop: 2 }}>{g.role}</div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MoreAndComments() {
+  const rest = window.BOOKS.slice(3);
+  const recent = window.REVIEWS.slice(0, 4);
+  return (
+    <section className="split-2" style={{ maxWidth: 1180, margin: '0 auto', padding: '6px 44px 10px' }}>
+      <div>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 24, fontWeight: 600, margin: '0 0 16px' }}>More to solve</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {rest.map(b => {
+            const p = petal(b);
+            return (
+              <a key={b.id} href={`book.html?id=${b.id}`} style={{ display: 'flex', gap: 14, background: '#fff',
+                borderRadius: 20, padding: 12, boxShadow: '0 8px 20px rgba(58,47,56,0.05)', alignItems: 'center',
+                borderLeft: `5px solid ${p.ink}`, textDecoration: 'none', color: INK }}>
+                <div style={{ width: 60, flex: '0 0 auto' }}><Cover book={b} h={80} idPrefix="mini" radius={12} /></div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ fontFamily: F_HEAD, fontSize: 16, fontWeight: 600, margin: '0 0 3px' }}>{b.title}</h3>
+                  <div style={{ fontSize: 12, color: p.ink, fontWeight: 800, marginBottom: 6 }}>{b.tag}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Stars n={b.stars} /><Dots n={b.difficulty} p={p} /></div>
+                </div>
+                <span style={{ background: p.ink, color: p.on, padding: '9px 14px', borderRadius: 999, fontSize: 12,
+                  fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>Amazon</span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+      <div>
+        <h2 style={{ fontFamily: F_HEAD, fontSize: 24, fontWeight: 600, margin: '0 0 16px' }}>The comments 💬</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {recent.map((r, i) => {
+            const p = PETALS[['rose','coral','mint','sky','lav','berry'][i % 6]];
+            const b = window.bookById(r.book);
+            return (
+              <div key={i} style={{ background: '#fff', borderRadius: 20, padding: 18, boxShadow: '0 8px 20px rgba(58,47,56,0.05)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: p.ink, color: '#fff',
+                    display: 'grid', placeItems: 'center', fontFamily: F_HEAD, fontSize: 15, fontWeight: 600 }}>{r.name[0]}</div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {r.name}{r.club && <Pill bg={p.soft} color={p.ink}>club</Pill>}</div>
+                    <div style={{ fontSize: 11, color: SOFT, fontWeight: 700 }}>on “{b.title}”</div>
+                  </div>
+                  <span style={{ marginLeft: 'auto' }}><Stars n={r.stars} /></span>
+                </div>
+                <p style={{ fontSize: 13.5, lineHeight: 1.55, fontWeight: 600, margin: 0 }}>{r.text}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WatchStrip() {
+  const preview = window.VIDEOS.slice(0, 4);
+  return (
+    <section style={{ maxWidth: 1180, margin: '40px auto', padding: '0 24px' }}>
+      <div style={{ borderRadius: 28, padding: '34px 36px',
+        background: 'linear-gradient(120deg, oklch(0.95 0.05 300), oklch(0.95 0.05 340) 55%, oklch(0.95 0.05 25))' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22,
+          flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '0 0 4px' }}>Watch us puzzle it 🎬</h2>
+            <p style={{ fontSize: 14, color: SOFT, fontWeight: 700, margin: 0 }}>
+              The laughs, the dead-ends and the happy-dance moments — on TikTok.</p>
+          </div>
+          <a href="watch.html" style={{ fontSize: 13, fontWeight: 800, color: PETALS.berry.ink, textDecoration: 'none' }}>
+            See all videos →</a>
+        </div>
+        <div className="watch-strip">
+          {preview.map((u, i) => (
+            <window.TikTokEmbed key={i} url={u} height={520}
+              accent={PETALS[['rose','coral','lav','berry'][i % 4]]} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ShopStrip() {
+  const picks = window.MERCH.slice(0, 4);
+  return (
+    <section style={{ maxWidth: 1180, margin: '40px auto', padding: '0 24px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 18,
+        flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h2 style={{ fontFamily: F_HEAD, fontSize: 28, fontWeight: 600, margin: '0 0 4px' }}>From the shop 🛍️</h2>
+          <p style={{ fontSize: 14, color: SOFT, fontWeight: 700, margin: 0 }}>
+            Puzzle Girls Club merch — read, deduce, solve, wear it.</p>
+        </div>
+        <a href="shop.html" style={{ fontSize: 13, fontWeight: 800, color: PETALS.lav.ink, textDecoration: 'none' }}>
+          Shop all →</a>
+      </div>
+      <div className="shop-strip">
+        {picks.map(prod => {
+          const c = PETALS[prod.petal] || PETALS.rose;
+          return (
+            <a key={prod.id} href="shop.html" style={{ display: 'block', textDecoration: 'none', color: INK,
+              background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 10px 24px rgba(58,47,56,0.07)',
+              borderTop: `4px solid ${c.ink}` }}>
+              <div style={{ background: `linear-gradient(150deg, ${c.soft}, #fff 90%)` }}>
+                <img src={prod.img} alt={prod.name} style={{ display: 'block', width: '100%', height: 150,
+                  objectFit: 'cover', objectPosition: 'center' }} />
+              </div>
+              <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                gap: 8 }}>
+                <span style={{ fontFamily: F_HEAD, fontSize: 14.5, fontWeight: 600, lineHeight: 1.15 }}>{prod.name}</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: c.ink, flex: '0 0 auto' }}>{prod.price}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ fontFamily: F_BODY, color: INK }}>
+      <Nav active="Home" />
+      <Hero />
+      <Featured />
+      <Girls />
+      <WatchStrip />
+      <ShopStrip />
+      <MoreAndComments />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
