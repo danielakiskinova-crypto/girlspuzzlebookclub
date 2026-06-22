@@ -17,5 +17,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          # If you want a commit even when nothing changed:
           allow_empty_commit: true
